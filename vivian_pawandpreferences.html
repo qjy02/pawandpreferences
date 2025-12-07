@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paws & Preferences: Find Your Favourite Kitty</title>
+
+    <!-- ICON -->
+    <link
+      rel="icon"
+      href="image/Vispiv.png"
+      type="image/png"
+    />
+
+    <!-- FONT LINKS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Patrick+Hand&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- CSS SECTION -->
+    <style>
+        /* COLOR SECTION */
+        :root {
+            /* Animal Crossing inspired natural green palette */
+            --primary-green: #8bc34a;
+            --secondary-green: #689f38;
+            --accent-green: #aed581;
+            --light-green: #dcedc8;
+            --dark-green: #33691e;
+            --earth-brown: #8d6e63;
+            --light-brown: #d7ccc8;
+            --black: #000;
+            --white: #fff;
+            --light-gray: #f5f5f5;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --border-radius: 16px;
+            --game-blue: #4fc3f7;
+            --game-pink: #f06292;
+            --game-yellow: #ffd54f;
+        }
+
+        /* GLOBAL STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* BODY SECTION */
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--light-green);
+            color: var(--dark-green);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+            overflow: hidden;
+            position: relative;
+            padding: 0;
+        }
+        
+        /* ANIMAL CROSSING THEMED BACKGROUND */
+        .ac-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .ac-leaf {
+            position: absolute;
+            color: var(--secondary-green);
+            opacity: 0.3;
+            font-size: 2rem;
+        }
+        
+        .ac-paw {
+            position: absolute;
+            color: var(--earth-brown);
+            opacity: 0.2;
+            font-size: 1.8rem;
+        }
+        
+        .ac-dot {
+            position: absolute;
+            background-color: var(--game-yellow);
+            border-radius: 50%;
+            opacity: 0.15;
+        }
+        
+        /* HEADER SECTION */
+        header {
+            background-color: var(--dark-green);
+            padding: 0.8rem 1.5rem;
+            position: relative;
+            border-bottom: 4px solid var(--secondary-green);
+            box-shadow: 0 4px 12px rgba(51, 105, 30, 0.2);
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1400px;
+            position: relative;
+        }
+        
+        /* DECORATION SECTION */
+        .ac-leaf-decoration {
+            position: absolute;
+            left: 20px;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .ac-leaf-decoration .leaf {
+            color: var(--white);
+            font-size: 1.4rem;
+            text-shadow: 1px 1px 0 var(--dark-green);
+            animation: sway 3s infinite alternate;
+        }
+        
+        .ac-leaf-decoration .leaf:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+        
+        .ac-leaf-decoration .leaf:nth-child(3) {
+            animation-delay: 1s;
+        }
+        
+        @keyframes sway {
+            0% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
+        
+        .cat-icon {
+            font-size: 1.8rem;
+            color: var(--white);
+            margin-right: 0.8rem;
+            text-shadow: 2px 2px 0 var(--secondary-green);
+            background-color: var(--game-pink);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--white);
+            box-shadow: 0 3px 0 var(--secondary-green);
+        }
+
+        .cat-icon :hover {
+            cursor: pointer;
+        }
+        
+        .title {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.6rem;
+            color: var(--white);
+            text-align: center;
+            text-shadow: 1px 1px 0 var(--secondary-green);
+            letter-spacing: 0.5px;
+        }
+
+        
+        .title span {
+            color: var(--white);
+        }
+        
+        /* MAIN CONTENT SECTION */
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 1rem;
+            overflow: hidden;
+        }
+        
+        .main-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* FLIP NOTE SECTION */
+        .flip-note-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        /* Inner container - simple carousel */
+        .flip-note-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 800px;
+            max-height: 600px;
+            cursor: pointer;
+        }
+
+        .flip-note-front,
+        .flip-note-back,
+        .flip-note-third {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            background-color: var(--white);
+            border: 8px solid var(--light-brown);
+            padding: 2rem;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        /* FIRST PAGE SECTION */
+        .flip-note-front {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--light-green) 0%, var(--white) 100%);
+        }
+
+        /* SECOND PAGE SECTION */
+        .flip-note-back {
+            opacity: 0;
+            transform: translateX(100px) scale(0.95);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--white) 100%);
+        }
+
+        /* THIRD PAGE SECTION */
+        .flip-note-third {
+            opacity: 0;
+            transform: translateX(100px) scale(0.95);
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--light-green) 0%, var(--white) 100%);
+        }
+
+        .flip-note-inner.page3 .flip-note-third {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            z-index: 10; /* Increased z-index */
+        }
+
+        .flip-note-third .transparent-button {
+            position: relative;
+            z-index: 100;
+            pointer-events: auto !important;
+        }
+
+        .flip-note-third .transparent-button :hover {
+            cursor: pointer;
+        }
+
+        /* ACTIVE PAGE SECTION */
+        .flip-note-inner.page1 .flip-note-front {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+
+        .flip-note-inner.page1 .flip-note-back,
+        .flip-note-inner.page1 .flip-note-third {
+            opacity: 0;
+            transform: translateX(100px) scale(0.95);
+        }
+
+        .flip-note-inner.page2 .flip-note-back {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+
+        .flip-note-inner.page2 .flip-note-front,
+        .flip-note-inner.page2 .flip-note-third {
+            opacity: 0;
+            transform: translateX(-100px) scale(0.95);
+        }
+
+        .flip-note-inner.page3 .flip-note-third {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+
+        .flip-note-inner.page3 .flip-note-front,
+        .flip-note-inner.page3 .flip-note-back {
+            opacity: 0;
+            transform: translateX(-100px) scale(0.95);
+        }
+        
+        .note-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1rem;
+            overflow: hidden;
+        }
+        
+        /* SIDE ARROW NAVIGATION SECTION */
+        .flip-note-arrows {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            padding: 0 0.5rem;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .flip-note-arrow {
+            pointer-events: auto; /* Re-enable clicks for arrows */
+            background: none;
+            border: none;
+            color: var(--dark-green);
+            font-family: 'Patrick Hand', cursive;
+            font-size: 3rem;
+            font-weight: bold;
+            opacity: 0.5;
+            width: auto;
+            height: auto;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .flip-note-arrow:hover {
+            opacity: 1;
+            transform: scale(1.4);
+            color: var(--secondary-green);
+            text-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .flip-note-arrow:active {
+            transform: scale(1.2);
+            color: var(--dark-green);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .flip-note-arrow {
+                font-size: 2.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .flip-note-arrows {
+                padding: 0 0.3rem;
+            }
+            
+            .flip-note-arrow {
+                font-size: 2.5rem;
+                padding: 0.3rem 0.6rem;
+            }
+            
+            .flip-note-arrow:hover {
+                transform: scale(1.3);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .flip-note-arrows {
+                padding: 0 0.2rem;
+            }
+            
+            .flip-note-arrow {
+                font-size: 2.2rem;
+                padding: 0.2rem 0.4rem;
+            }
+            
+            .flip-note-arrow:hover {
+                transform: scale(1.2);
+            }
+        }
+
+        @media (max-height: 700px) {
+            .flip-note-arrow {
+                font-size: 2.5rem;
+            }
+        }
+        
+        /* FIRST PAGE SECTION */
+        .page1-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: justify;
+            align-items: justify;
+            text-align: justify;
+            font-family: 'Patrick Hand', cursive;
+            color: var(--dark-green);
+            font-size: 1.8rem;
+            line-height: 1.5;
+            padding: 1rem;
+        }
+        
+        .page1-footer {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 3px dashed var(--accent-green);
+        }
+        
+        /* SECOND PAGE SECTION */
+        .page2-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: 'Patrick Hand', cursive;
+            color: var(--dark-green);
+            font-size: 1.8rem;
+            line-height: 1.5;
+            padding: 1rem;
+        }
+        
+        .page2-title {
+            font-size: 2.5rem;
+            color: var(--dark-green);
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .page2-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background-color: var(--game-pink);
+            border-radius: 2px;
+        }
+        
+        /* MISSION LIST SECTION */
+        .mission-list {
+            list-style: none;
+            margin: 2rem auto;
+            padding-left: 0;
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .mission-list li {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            width: auto;
+            position: relative;
+        }
+        
+        /* THIRD PAGE SECTION */
+        .page3-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: 'Patrick Hand', cursive;
+            color: var(--dark-green);
+            padding: 1rem;
+        }
+        
+        .page3-title {
+            font-size: 2.5rem;
+            color: var(--dark-green);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .transparent-button {
+            background: transparent;
+            border: 3px solid var(--dark-green);
+            color: var(--dark-green);
+            padding: 1.2rem 2.5rem;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 2.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .transparent-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background-color: var(--dark-green);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+        
+        .transparent-button:hover {
+            color: var(--white);
+            transform: translateX(0) scale(1.05);
+        }
+        
+        .transparent-button:hover::before {
+            width: 100%;
+        }
+        
+        @keyframes slideInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .bottom-left,
+        .bottom-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .bottom-left i {
+            color: var(--game-pink);
+            font-size: 1.5rem;
+        }
+        
+        .bottom-right img {
+            border-radius: 50%;
+            border: 3px solid var(--accent-green);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Back button for second page */
+        .back-button {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: transparent;
+            border: 2px solid var(--dark-green);
+            color: var(--dark-green);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background-color: var(--dark-green);
+            color: var(--white);
+        }
+        
+        /* PLACEHOLDER MESSAGE SECTION */
+        .placeholder-message {
+            text-align: center;
+            padding: 2rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 4px dashed var(--accent-green);
+            max-width: 90%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        .placeholder-message i {
+            font-size: 3rem;
+            color: var(--game-pink);
+            margin-bottom: 1rem;
+        }
+        
+        .placeholder-message p {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.5rem;
+            color: var(--dark-green);
+        }
+        
+        /* FOOTER SECTION */
+        footer {
+            background-color: var(--dark-green);
+            color: var(--light-brown);
+            padding: 0.7rem 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 4px solid var(--secondary-green);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer-content {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: nowrap;
+            gap: 0.8rem;
+            position: relative;
+        }
+
+        .ac-paw-decoration {
+            position: absolute;
+            right: 20px;
+            display: flex;
+            gap: 6px;
+        }
+        
+        .ac-paw-decoration .paw {
+            color: var(--accent-green);
+            font-size: 1.2rem;
+            opacity: 0.6;
+            animation: bounce 2s infinite;
+        }
+        
+        .ac-paw-decoration .paw:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .ac-paw-decoration .paw:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        
+        .footer-divider {
+            color: var(--accent-green);
+        }
+        
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: nowrap;
+        }
+        
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .footer-links a:hover {
+            color: var(--game-blue);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        /* RESPONSIVE DESIGN SECTION */
+        @media (max-width: 1200px) {
+            .title {
+                font-size: 1.5rem;
+            }
+            
+            .cat-icon {
+                font-size: 1.6rem;
+                width: 40px;
+                height: 40px;
+            }
+            
+            .ac-leaf-decoration {
+                left: 15px;
+            }
+            
+            .ac-paw-decoration {
+                right: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 0.6rem 1rem;
+                min-height: 60px;
+            }
+            
+            .title {
+                font-size: 1.3rem;
+            }
+            
+            .cat-icon {
+                font-size: 1.4rem;
+                width: 36px;
+                height: 36px;
+                margin-right: 0.6rem;
+            }
+            
+            .ac-leaf-decoration {
+                left: 10px;
+                gap: 5px;
+            }
+            
+            .ac-leaf-decoration .leaf {
+                font-size: 1.1rem;
+            }
+            
+            .flip-note-front,
+            .flip-note-back,
+            .flip-note-third {
+                padding: 1.5rem;
+            }
+            
+            .page1-main,
+            .page2-main {
+                font-size: 1.5rem;
+            }
+            
+            .page2-title,
+            .page3-title {
+                font-size: 2rem;
+            }
+            
+            .mission-list li {
+                font-size: 1.3rem;
+            }
+            
+            .transparent-button {
+                font-size: 1.8rem;
+                padding: 1rem 2rem;
+            }
+            
+            footer {
+                padding: 0.6rem 1rem;
+                min-height: 50px;
+                font-size: 0.8rem;
+            }
+            
+            .footer-content {
+                gap: 0.6rem;
+            }
+            
+            .footer-links {
+                gap: 0.6rem;
+            }
+            
+            .ac-paw-decoration {
+                right: 10px;
+                gap: 4px;
+            }
+            
+            .ac-paw-decoration .paw {
+                font-size: 1rem;
+            }
+            
+            .placeholder-message p {
+                font-size: 1.3rem;
+            }
+            
+            .placeholder-message i {
+                font-size: 2.5rem;
+            }
+
+            .flip-note-arrows {
+                padding: 0 1rem;
+            }
+            
+            .flip-note-arrow {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .title {
+                font-size: 1.1rem;
+            }
+            
+            .cat-icon {
+                font-size: 1.2rem;
+                width: 32px;
+                height: 32px;
+                margin-right: 0.5rem;
+            }
+            
+            .flip-note-container {
+                padding: 0.5rem;
+            }
+            
+            .flip-note-front,
+            .flip-note-back,
+            .flip-note-third {
+                padding: 1rem;
+                border-width: 4px;
+            }
+            
+            .page1-main,
+            .page2-main {
+                font-size: 1.2rem;
+            }
+            
+            .page2-title,
+            .page3-title {
+                font-size: 1.8rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .mission-list li {
+                font-size: 1.1rem;
+                margin-bottom: 1rem;
+                padding-left: 2rem;
+            }
+            
+            .page1-footer {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .transparent-button {
+                font-size: 1.5rem;
+                padding: 0.8rem 1.5rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 0.2rem;
+            }
+            
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+            
+            .footer-divider {
+                display: none;
+            }
+            
+            .ac-leaf-decoration {
+                display: none;
+            }
+            
+            .ac-paw-decoration {
+                display: none;
+            }
+            
+            .placeholder-message {
+                padding: 1.5rem;
+            }
+            
+            .placeholder-message p {
+                font-size: 1.1rem;
+            }
+            
+            .placeholder-message i {
+                font-size: 2rem;
+            }
+
+            .flip-note-arrows {
+                padding: 0 0.5rem;
+            }
+    
+            .flip-note-arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+                border-width: 2px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .title {
+                font-size: 1rem;
+            }
+            
+            .cat-icon {
+                font-size: 1rem;
+                width: 28px;
+                height: 28px;
+                border-width: 2px;
+            }
+            
+            .flip-note-front,
+            .flip-note-back,
+            .flip-note-third {
+                padding: 0.8rem;
+            }
+            
+            .page1-main,
+            .page2-main {
+                font-size: 1rem;
+            }
+            
+            .page2-title,
+            .page3-title {
+                font-size: 1.5rem;
+            }
+            
+            .mission-list li {
+                font-size: 0.9rem;
+            }
+            
+            .transparent-button {
+                font-size: 1.2rem;
+                padding: 0.6rem 1.2rem;
+            }
+            
+            footer {
+                font-size: 0.75rem;
+                padding: 0.5rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+            
+            .placeholder-message {
+                padding: 1rem;
+            }
+            
+            .placeholder-message p {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-height: 700px) {
+            header {
+                padding: 0.5rem 1rem;
+                min-height: 50px;
+            }
+            
+            .flip-note-container {
+                padding: 0.5rem;
+            }
+            
+            .page1-main,
+            .page2-main {
+                font-size: 1.2rem;
+            }
+            
+            .page2-title,
+            .page3-title {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .mission-list li {
+                font-size: 1rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .transparent-button {
+                font-size: 1.5rem;
+                padding: 0.8rem 1.5rem;
+            }
+            
+            footer {
+                padding: 0.5rem 1rem;
+                min-height: 45px;
+            }
+            
+            .placeholder-message {
+                padding: 1rem;
+            }
+            
+            .placeholder-message i {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .placeholder-message p {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-height: 800px) and (min-width: 768px) {
+            header {
+                min-height: 65px;
+            }
+            
+            footer {
+                min-height: 55px;
+            }
+        }
+        
+        html, body {
+            overflow: hidden;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- BACKGROUND -->
+    <div class="ac-background" id="acBackground"></div>
+
+    <!-- BACKGROUND MUSIC -->
+    <!--
+        Music track: "Kitty" by Piki
+        Source: https://freetouse.com/music
+        Free to use in non-commercial content with attribution
+    -->
+    <!--<audio id="backgroundMusic" src="music/kitty.mp3" loop hidden></audio>-->
+    
+    <!-- HEADER SECTION -->
+    <header>
+        <div class="header-content">
+            <!-- CAT ICON -->
+            <div class="cat-icon">
+                <i class="fas fa-paw"></i>
+            </div>
+            
+            <!-- TITLE -->
+            <h1 class="title">Paws & <span>Preferences</span></h1>
+        </div>
+    </header>
+
+    <!-- BODY SECTION -->
+    <main>
+        <div class="main-content">
+            <!-- FLIPPING NOTE SECTION -->
+            <div class="flip-note-container">
+                <div class="flip-note-inner page1">
+                    <!-- Page 1: Welcome -->
+                    <div class="flip-note-front">
+                        <div class="note-content">
+                            <div class="page1-main">
+                                Welcome, brave adventurer! In the magical land of Felinia, cats of all kinds are waiting to meet their perfect human friends. But there's a problem – the Cat Council needs your help to adopt the most compatible kitties!
+                                <br><br>
+                                A mysterious spell has scattered cats across the digital realm, and only you can help by discovering which feline friends match your preferences. Start an adventure and defeat the secret boss!
+                            </div>
+                            <div class="page1-footer">
+                                <div class="bottom-left">
+                                    <i class="fas fa-paw"></i>
+                                    <span>Princess Whiskie, Guardian of Felinia</span>
+                                </div>
+                                <div class="bottom-right">
+                                    <img src="https://cataas.com/cat/0GC9MRUAqxhBzPyA?width=100&height=100" 
+                                         alt="Cat" 
+                                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzhkYmVjOCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiMzMzY5MWUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj7wn6S0PC90ZXh0Pjwvc3ZnPg=='">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Page 2: Mission -->
+                    <div class="flip-note-back">
+                        <div class="note-content">
+                            <div class="page2-main">
+                                <h2 class="page2-title">Your Mission</h2>
+                                <ul class="mission-list">
+                                    <li>1. Choose your preferred kitty traits</li>
+                                    <li>2. Swipe kitty left as dislike, right as like</li>
+                                    <li>3. Review your kitty collection</li>
+                                    <li>4. Select a kitty and fight the secret enemy boss</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Page 3: Begin Adventure -->
+                    <div class="flip-note-third">
+                        <div class="note-content">
+                            <div class="page3-main">
+                                <h2 class="page3-title">Ready for Adventure?</h2>
+                                <button class="transparent-button">Begin Your Adventure!</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Side Arrow Navigation -->
+                    <div class="flip-note-arrows">
+                        <button class="flip-note-arrow arrow-prev" title="Previous Page">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="flip-note-arrow arrow-next" title="Next Page">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER SECTION -->
+    <footer>
+        <div class="footer-content">
+            <!-- COPYRIGHT -->
+            <div>Copyright © 2025 Paw And Preferences</div>
+            
+            <!-- DIVIDER -->
+            <div class="footer-divider">|</div>
+            
+            <!-- LINKS -->
+            <div class="footer-links">
+                <!-- CATAAS API LINK -->
+                <a href="https://cataas.com/" target="_blank" rel="noopener noreferrer">
+                    Cataas API <i class="paw fas fa-cat"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT SECTION -->
+     <script>
+        console.log("Welcome to Paws & Preferences: Find Your Favourite Kitty!");
+
+        // LOAD BACKGROUND MUSIC
+        document.addEventListener("click", () => {
+            const bgm = document.getElementById("backgroundMusic");
+            bgm.play();
+        }, { once: true });
+        
+        // LOAD BACKGROUND
+        document.addEventListener('DOMContentLoaded', function() {
+            const background = document.getElementById('acBackground');
+            
+            const decorations = [
+                { type: 'leaf', count: 15 },
+                { type: 'paw', count: 10 },
+                { type: 'dot', count: 20 }
+            ];
+            
+            decorations.forEach(deco => {
+                for (let i = 0; i < deco.count; i++) {
+                    const element = document.createElement('div');
+                    
+                    if (deco.type === 'leaf') {
+                        element.className = 'ac-leaf';
+                        element.innerHTML = '<i class="fas fa-leaf"></i>';
+                    } else if (deco.type === 'paw') {
+                        element.className = 'ac-paw';
+                        element.innerHTML = '<i class="fas fa-paw"></i>';
+                    } else if (deco.type === 'dot') {
+                        element.className = 'ac-dot';
+                        element.style.width = Math.random() * 10 + 5 + 'px';
+                        element.style.height = element.style.width;
+                    }
+                    
+                    // Random position
+                    element.style.left = Math.random() * 100 + '%';
+                    element.style.top = Math.random() * 100 + '%';
+                    
+                    // Random animation delay
+                    element.style.animationDelay = Math.random() * 5 + 's';
+                    
+                    // Add to background
+                    background.appendChild(element);
+                }
+            });
+            
+            // Initialize flipping note
+            function initializeFlippingNote() {
+                const flipNoteInner = document.querySelector('.flip-note-inner');
+                const transparentBtn = document.querySelector('.transparent-button');
+                const prevArrow = document.querySelector('.arrow-prev');
+                const nextArrow = document.querySelector('.arrow-next');
+                let currentPage = 1;
+                const totalPages = 3;
+                
+                // Function to go to a specific page
+                function goToPage(pageNumber) {
+                    if (pageNumber < 1 || pageNumber > totalPages) return;
+                    
+                    currentPage = pageNumber;
+                    
+                    // Update carousel class
+                    flipNoteInner.className = 'flip-note-inner';
+                    flipNoteInner.classList.add(`page${pageNumber}`);
+                    
+                    console.log(`Navigated to page ${pageNumber}`);
+                }
+                
+                // Click handler for the carousel (cycles through pages)
+                flipNoteInner.addEventListener('click', function(e) {
+                    // Don't navigate if clicking on arrows or button
+                    if (e.target.closest('.flip-note-arrow') || 
+                        e.target.closest('.transparent-button')) {
+                        return;
+                    }
+                    
+                    // Cycle to next page
+                    currentPage = currentPage % totalPages + 1;
+                    goToPage(currentPage);
+                });
+                
+                // Arrow navigation handlers
+                if (prevArrow) {
+                    prevArrow.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        e.preventDefault(); // Prevent any default button behavior
+                        // Previous page
+                        currentPage = currentPage === 1 ? totalPages : currentPage - 1;
+                        goToPage(currentPage);
+                    });
+                }
+                
+                if (nextArrow) {
+                    nextArrow.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        e.preventDefault(); // Prevent any default button behavior
+                        // Next page
+                        currentPage = currentPage % totalPages + 1;
+                        goToPage(currentPage);
+                    });
+                }
+                
+                // Button click handler
+                if (transparentBtn) {
+                    // Remove any existing event listeners first
+                    transparentBtn.replaceWith(transparentBtn.cloneNode(true));
+                    
+                    // Get the new button reference
+                    const newTransparentBtn = document.querySelector('.transparent-button');
+                    
+                    newTransparentBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        console.log('Begin Your Adventure button clicked!');
+                        alert('Your adventure begins! The button functionality can be implemented here.');
+                    });
+                    
+                    // Force button to be clickable
+                    newTransparentBtn.style.pointerEvents = 'auto';
+                    newTransparentBtn.style.position = 'relative';
+                    newTransparentBtn.style.zIndex = '1000';
+                }
+                
+                // Add keyboard navigation
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'ArrowRight' || e.key === ' ') {
+                        // Next page
+                        currentPage = currentPage % totalPages + 1;
+                        goToPage(currentPage);
+                    } else if (e.key === 'ArrowLeft') {
+                        // Previous page
+                        currentPage = currentPage === 1 ? totalPages : currentPage - 1;
+                        goToPage(currentPage);
+                    } else if (e.key >= '1' && e.key <= '3') {
+                        // Direct page access
+                        goToPage(parseInt(e.key));
+                    }
+                });
+                
+                // Initialize page 1
+                goToPage(1);
+            }
+            
+            // Ensure the page fits exactly in the viewport
+            function adjustLayout() {
+                const vh = window.innerHeight;
+                const header = document.querySelector('header');
+                const footer = document.querySelector('footer');
+                const main = document.querySelector('main');
+                
+                // Calculate available height for main content
+                const headerHeight = header.offsetHeight;
+                const footerHeight = footer.offsetHeight;
+                const mainHeight = vh - headerHeight - footerHeight;
+                
+                // Set main content height
+                main.style.height = mainHeight + 'px';
+                
+                // Adjust flipping note size
+                const flipContainer = document.querySelector('.flip-note-container');
+                if (flipContainer) {
+                    flipContainer.style.height = mainHeight + 'px';
+                }
+                
+                // Log for debugging
+                console.log(`Viewport: ${vh}px, Header: ${headerHeight}px, Footer: ${footerHeight}px, Main: ${mainHeight}px`);
+            }
+            
+            // Adjust layout on load and resize
+            adjustLayout();
+            window.addEventListener('resize', adjustLayout);
+            
+            // Initialize flipping note after layout is set
+            setTimeout(initializeFlippingNote, 100);
+        });
+     </script>
+</body>
+</html>
