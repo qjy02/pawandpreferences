@@ -947,6 +947,12 @@
                     background.appendChild(element);
                 }
             });
+
+            // LOAD BACKGROUND MUSIC
+            document.addEventListener("click", () => {
+                const bgm = document.getElementById("backgroundMusic");
+                bgm.play();
+            }, { once: true });
             
             // Initialize flipping note
             function initializeFlippingNote() {
