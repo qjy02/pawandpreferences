@@ -36,7 +36,7 @@
             --game-yellow: #ffd54f;
         }
 
-        /* GLOBAL STYLES */
+        /* GLOBAL STYLES SECTION */
         * {
             margin: 0;
             padding: 0;
@@ -61,7 +61,7 @@
             position: relative;
         }
         
-        /* ANIMAL CROSSING THEMED BACKGROUND */
+        /* GREEN THEMED BACKGROUND */
         .ac-background {
             position: fixed;
             top: 0;
@@ -195,7 +195,6 @@
             position: relative;
         }
 
-        /* Inner container - simple carousel */
         .flip-note-inner {
             position: relative;
             width: 100%;
@@ -392,6 +391,27 @@
             border-radius: 2px;
         }
         
+        /* THIRD PAGE SECTION */
+        .page3-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: 'Patrick Hand', cursive;
+            color: var(--dark-green);
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        
+        .page3-title {
+            font-size: 2.5rem;
+            color: var(--dark-green);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
         /* MISSION LIST SECTION */
         .mission-list {
             list-style: none;
@@ -415,65 +435,24 @@
             width: 100%;
             text-align: left;
         }
-        
-        /* THIRD PAGE SECTION */
-        .page3-main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            font-family: 'Patrick Hand', cursive;
-            color: var(--dark-green);
-            padding: 1rem;
-            overflow-y: auto;
-        }
-        
-        .page3-title {
-            font-size: 2.5rem;
-            color: var(--dark-green);
-            margin-bottom: 3rem;
-            text-align: center;
-        }
-        
-        .transparent-button {
-            background: transparent;
+
+        /* ADVENTURE BUTTON SECTION */
+        .adventure-button {
+            background-color: var(--dark-green);
             border: 3px solid var(--dark-green);
-            color: var(--dark-green);
+            color: var(--white);
             padding: 1.2rem 2.5rem;
             font-family: 'Patrick Hand', cursive;
             font-size: 2.2rem;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            z-index: 5;
-            pointer-events: auto !important;
+            transition: transform 0.3s ease;
         }
-        
-        .transparent-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 100%;
-            background-color: var(--dark-green);
-            transition: width 0.3s ease;
-            z-index: -1;
-        }
-        
-        .transparent-button:hover {
-            color: var(--white);
+
+        .adventure-button:hover {
             transform: scale(1.05);
         }
-        
-        .transparent-button:hover::before {
-            width: 100%;
-        }
-        
+
         .bottom-left,
         .bottom-right {
             display: flex;
@@ -567,7 +546,7 @@
                 font-size: 1.3rem;
             }
             
-            .transparent-button {
+            .adventure-button {
                 font-size: 2rem;
             }
         }
@@ -621,7 +600,7 @@
                 text-align: center;
             }
             
-            .transparent-button {
+            .adventure-button {
                 font-size: 1.8rem;
                 padding: 1rem 2rem;
             }
@@ -694,7 +673,7 @@
                 gap: 0.5rem;
             }
             
-            .transparent-button {
+            .adventure-button {
                 font-size: 1.5rem;
                 padding: 0.8rem 1.5rem;
             }
@@ -756,7 +735,7 @@
                 font-size: 0.9rem;
             }
             
-            .transparent-button {
+            .adventure-button {
                 font-size: 1.2rem;
                 padding: 0.6rem 1.2rem;
             }
@@ -788,7 +767,7 @@
                 margin-bottom: 0.8rem;
             }
             
-            .transparent-button {
+            .adventure-button {
                 font-size: 1.5rem;
                 padding: 0.8rem 1.5rem;
             }
@@ -800,8 +779,7 @@
     <!-- BACKGROUND -->
     <div class="ac-background" id="acBackground"></div>
 
-     <!-- BACKGROUND MUSIC -->
-    <!--
+    <!-- BACKGROUND MUSIC 
         Music track: "Kitty" by Piki
         Source: https://freetouse.com/music
         Free to use in non-commercial content with attribution
@@ -868,12 +846,12 @@
                         <div class="note-content">
                             <div class="page3-main">
                                 <h2 class="page3-title">Ready for Adventure?</h2>
-                                <button class="transparent-button">Begin Your Adventure!</button>
+                                <button class="adventure-button">Begin Your Adventure!</button>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Side Arrow Navigation -->
+                    <!-- FLIP NOTE SIDE ARROW NAVIGATION SECTION -->
                     <div class="flip-note-arrows">
                         <button class="flip-note-arrow arrow-prev" title="Previous Page">
                             <i class="fas fa-chevron-left"></i>
@@ -954,10 +932,10 @@
                 bgm.play();
             }, { once: true });
             
-            // Initialize flipping note
+            // INITIALIZE FLIPPING NOTE FUNCTIONALITY
             function initializeFlippingNote() {
                 const flipNoteInner = document.querySelector('.flip-note-inner');
-                const transparentBtn = document.querySelector('.transparent-button');
+                const adventureBtn = document.querySelector('.adventure-button');
                 const prevArrow = document.querySelector('.arrow-prev');
                 const nextArrow = document.querySelector('.arrow-next');
                 const pageDots = document.querySelectorAll('.page-dot');
@@ -1006,8 +984,8 @@
                 }
                 
                 // Button click handler
-                if (transparentBtn) {
-                    transparentBtn.addEventListener('click', function(e) {
+                if (adventureBtn) {
+                    adventureBtn.addEventListener('click', function(e) {
                         e.stopPropagation();
                         e.preventDefault();
                         console.log('Begin Your Adventure button clicked!');
