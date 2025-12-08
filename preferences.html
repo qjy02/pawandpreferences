@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paws & Preferences: Cat Swipe Adventure</title>
+
+    <!-- ICON -->
+    <link rel="icon" href="image/Vispiv.png" type="image/png" />
+
+    <!-- FONT LINKS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Patrick+Hand&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- CSS SECTION -->
+    <style>
+        /* COLOR SECTION */
+        :root {
+            --primary-green: #8bc34a;
+            --secondary-green: #689f38;
+            --accent-green: #aed581;
+            --light-green: #dcedc8;
+            --dark-green: #33691e;
+            --earth-brown: #8d6e63;
+            --light-brown: #d7ccc8;
+            --black: #000;
+            --white: #fff;
+            --light-gray: #f5f5f5;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --border-radius: 16px;
+            --game-blue: #4fc3f7;
+            --game-pink: #f06292;
+            --game-yellow: #ffd54f;
+            --like-green: #4CAF50;
+            --dislike-red: #f44336;
+            --tab-active: var(--dark-green);
+            --tab-inactive: var(--secondary-green);
+        }
+
+        /* GLOBAL STYLES SECTION */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+        
+        /* BODY SECTION */
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--light-green);
+            color: var(--dark-green);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+            position: relative;
+            touch-action: pan-y;
+        }
+        
+        /* GREEN THEMED BACKGROUND */
+        .ac-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .ac-leaf {
+            position: absolute;
+            color: var(--secondary-green);
+            opacity: 0.3;
+            font-size: 2rem;
+        }
+        
+        .ac-paw {
+            position: absolute;
+            color: var(--earth-brown);
+            opacity: 0.2;
+            font-size: 1.8rem;
+        }
+        
+        .ac-dot {
+            position: absolute;
+            background-color: var(--game-yellow);
+            border-radius: 50%;
+            opacity: 0.15;
+        }
+        
+        /* HEADER SECTION */
+        header {
+            background-color: var(--dark-green);
+            padding: 0.8rem 1.5rem;
+            position: relative;
+            border-bottom: 4px solid var(--secondary-green);
+            box-shadow: 0 4px 12px rgba(51, 105, 30, 0.2);
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1400px;
+            position: relative;
+        }
+        
+        .cat-icon {
+            font-size: 1.8rem;
+            color: var(--white);
+            margin-right: 0.8rem;
+            text-shadow: 2px 2px 0 var(--secondary-green);
+            background-color: var(--game-pink);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--white);
+            box-shadow: 0 3px 0 var(--secondary-green);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        
+        .title {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.6rem;
+            color: var(--white);
+            text-align: center;
+            text-shadow: 1px 1px 0 var(--secondary-green);
+            letter-spacing: 0.5px;
+        }
+        
+        /* MAIN CONTENT SECTION */
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 1rem;
+            overflow: hidden;
+        }
+        
+        .main-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* SWIPE CONTAINER */
+        .swipe-container {
+            width: 100%;
+            height: 100%;
+            max-width: 500px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* PROGRESS BAR */
+        .progress-container {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 20;
+            background: transparent;
+        }
+
+        .progress-text {
+            font-family: 'Patrick Hand', cursive;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--dark-green);
+            margin-bottom: 0.5rem;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--light-brown);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        /* DRAG AREA */
+        .drag-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-family: 'Patrick Hand', cursive;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .drag-like {
+            color: var(--primary-green);
+        }
+
+        .drag-dislike {
+            color: var(--game-pink);
+        }
+
+        /* SWIPE AREA */
+        .swipe-area {
+            width: 100%;
+            height: calc(100% - 100px);
+            position: relative;
+            perspective: 1000px;
+            user-select: none;
+            margin-top: 100px;
+            cursor: grab;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .swipe-area:active {
+            cursor: grabbing;
+        }
+
+        .swipe-area::selection {
+            background: transparent;
+        }
+
+        .swipe-area::-moz-selection {
+            background: transparent;
+        }
+
+        /* CARD STYLES */
+        .cat-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 8px solid var(--light-brown);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: center bottom;
+            display: flex;
+            flex-direction: column;
+            will-change: transform;
+            cursor: grab;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1), opacity 0.3s ease;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-user-drag: none;
+        }
+
+        .cat-card:active {
+            cursor: grabbing;
+        }
+
+        .cat-card.swipe-right {
+            transform: translateX(200%) rotate(20deg);
+            opacity: 0;
+        }
+
+        .cat-card.swipe-left {
+            transform: translateX(-200%) rotate(-20deg);
+            opacity: 0;
+        }
+
+        /* CARD IMAGE */
+        .card-image-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--light-green) 0%, var(--accent-green) 100%);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        /* Loading state for image */
+        .card-image.loading {
+            opacity: 0.3;
+            filter: blur(2px);
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* SWIPE INDICATORS */
+        .swipe-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3.5rem;
+            font-weight: 900;
+            opacity: 0;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            padding: 1.5rem;
+            border: none;
+            font-family: 'Patrick Hand', cursive;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            background: none;
+        }
+
+        .swipe-indicator.like {
+            right: 20px;
+            color: var(--primary-green);
+            transform: translateY(-50%) rotate(15deg);
+            border: none;
+        }
+
+        .swipe-indicator.dislike {
+            left: 20px;
+            color: var(--game-pink);
+            transform: translateY(-50%) rotate(-15deg);
+            border: none;
+        }
+
+        /* RESULTS SCREEN - CLEAN DESIGN */
+        .results-screen {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            border: 8px solid var(--light-brown);
+            box-shadow: var(--shadow);
+            display: none;
+        }
+
+        .results-title {
+            font-family: 'Patrick Hand', cursive;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: var(--dark-green);
+            text-align: center;
+            margin-bottom: 1rem;
+            padding-top: 0.5rem;
+        }
+
+        /* TABS - CLEAN */
+        .results-tabs {
+            display: flex;
+            background: transparent;
+            border-bottom: 2px solid var(--light-brown);
+            margin-bottom: 1rem;
+            gap: 0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            font-family: 'Patrick Hand', cursive;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: transparent;
+            color: var(--tab-inactive);
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+
+        .tab.active {
+            color: var(--dark-green);
+            border-bottom: 3px solid var(--dark-green);
+            font-weight: bold;
+        }
+
+        .tab-count {
+            margin-left: 0.5rem;
+            background: var(--light-brown);
+            border-radius: 12px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.9rem;
+        }
+
+        .tab.active .tab-count {
+            background: var(--dark-green);
+            color: white;
+        }
+
+        /* CATS LIST SECTION */
+        .cats-list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cats-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            display: none;
+            flex: 1;
+        }
+
+        .cats-list.active {
+            display: flex;
+        }
+
+        .cat-list-item {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            gap: 1rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid var(--light-brown);
+        }
+
+        .cat-list-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-color: var(--secondary-green);
+        }
+
+        .cat-list-image-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 3px solid var(--light-brown);
+        }
+
+        .cat-list-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .cat-list-info {
+            flex: 1;
+            padding: 0.5rem;
+        }
+
+        .cat-list-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .cat-tag {
+            background: var(--light-green);
+            color: var(--dark-green);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .cat-list-date {
+            font-size: 0.85rem;
+            color: var(--earth-brown);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .empty-state-list {
+            text-align: center;
+            color: var(--earth-brown);
+            font-size: 1.2rem;
+            margin-top: 2rem;
+            font-family: 'Patrick Hand', cursive;
+            width: 100%;
+        }
+
+        /* MODAL DIALOG */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--dislike-red);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 1.2rem;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
+        }
+
+        .modal-close:hover {
+            transform: scale(1.1);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            max-height: 80vh;
+        }
+
+        /* RESTART BUTTON */
+        .restart-btn {
+            padding: 1rem 2rem;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Patrick Hand', cursive;
+            font-weight: bold;
+            background: var(--game-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem auto;
+            width: fit-content;
+            box-shadow: var(--shadow);
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.05);
+            background: var(--secondary-green);
+        }
+
+        /* LOADING OVERLAY WITH TIPS */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        /* LOADING CAT STYLES */
+        .loading-cat {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 2rem;
+            animation: cat-bounce 2s ease-in-out infinite;
+            border: 8px solid var(--light-brown);
+            box-shadow: 0 0 0 4px var(--secondary-green),
+                        0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes cat-bounce {
+            0%, 100% { 
+                transform: translateY(0) rotate(0deg); 
+            }
+            25% { 
+                transform: translateY(-10px) rotate(-5deg); 
+            }
+            50% { 
+                transform: translateY(5px) rotate(5deg); 
+            }
+            75% { 
+                transform: translateY(-5px) rotate(3deg); 
+            }
+        }
+
+        /* LOADING INDICATOR FOR CARD IMAGES */
+        .loading-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            backdrop-filter: blur(2px);
+        }
+
+        .loading-indicator .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--light-brown);
+            border-top: 4px solid var(--secondary-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        .loading-indicator .loading-text {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.2rem;
+            color: var(--dark-green);
+            text-align: center;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-family: 'Patrick Hand', cursive;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: var(--dark-green);
+            margin-bottom: 1rem;
+        }
+
+        .loading-tips {
+            font-family: 'Nunito', sans-serif;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: var(--earth-brown);
+            max-width: 400px;
+            line-height: 1.6;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(220, 237, 200, 0.5);
+            border-radius: var(--border-radius);
+        }
+
+        .loading-tips i {
+            color: var(--game-pink);
+            margin: 0 0.3rem;
+        }
+
+        /* FOOTER SECTION */
+        footer {
+            background-color: var(--dark-green);
+            color: var(--light-brown);
+            padding: 0.7rem 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 4px solid var(--secondary-green);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .footer-content {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .footer-divider {
+            color: var(--accent-green);
+        }
+        
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .footer-links a:hover {
+            color: var(--game-blue);
+        }
+
+        /* RESPONSIVE DESIGN - ENHANCED */
+        @media (max-width: 768px) {
+            .swipe-area {
+                height: calc(100% - 90px);
+                margin-top: 90px;
+            }
+            
+            .progress-container {
+                padding: 0.5rem;
+            }
+            
+            .swipe-indicator {
+                font-size: 3.5rem;
+            }
+            
+            .cat-list-item {
+                padding: 0.8rem;
+                gap: 0.8rem;
+            }
+            
+            .cat-list-image-container {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .cat-tag {
+                font-size: 0.8rem;
+                padding: 0.2rem 0.6rem;
+            }
+            
+            .modal-content {
+                max-width: 95%;
+                max-height: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .swipe-area {
+                height: calc(100% - 80px);
+                margin-top: 80px;
+            }
+            
+            .progress-text {
+                font-size: 1.1rem;
+            }
+            
+            .progress-bar {
+                height: 6px;
+            }
+            
+            .swipe-indicator {
+                font-size: 2.8rem;
+            }
+            
+            .cat-list-item {
+                flex-direction: column;
+                text-align: center;
+                padding: 1rem;
+            }
+            
+            .cat-list-image-container {
+                width: 100%;
+                height: 200px;
+            }
+            
+            .cat-list-info {
+                width: 100%;
+            }
+            
+            .cat-list-tags {
+                justify-content: center;
+            }
+            
+            .tab {
+                padding: 0.8rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .cat-list-image-container {
+                height: 150px;
+            }
+            
+            .progress-text {
+                font-size: 1rem;
+            }
+        }
+
+        /* LANDSCAPE MODE OPTIMIZATIONS */
+        @media (orientation: landscape) {
+            .swipe-container {
+                max-height: 90vh;
+            }
+            
+            .swipe-area {
+                height: calc(100% - 70px);
+                margin-top: 70px;
+                max-height: 60vh;
+            }
+            
+            .cat-card {
+                max-height: 60vh;
+            }
+            
+            .progress-container {
+                padding: 0.3rem 0.5rem;
+            }
+            
+            .progress-text {
+                font-size: 1rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .results-screen {
+                max-height: 80vh;
+            }
+        }
+
+        /* TALL SCREENS */
+        @media (min-height: 800px) and (orientation: portrait) {
+            .swipe-area {
+                max-height: 70vh;
+            }
+        }
+
+        /* DESKTOP LARGE SCREENS */
+        @media (min-width: 1200px) {
+            .swipe-container {
+                max-width: 600px;
+            }
+        }
+
+        /* TABLET */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .swipe-container {
+                max-width: 600px;
+            }
+        }
+
+        /* HIGH DPI SCREENS */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .swipe-indicator {
+                text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            }
+            
+            .cat-card {
+                border-width: 4px;
+            }
+        }
+
+        /* PRINT STYLES */
+        @media print {
+            .swipe-area,
+            .progress-container,
+            .instructions {
+                display: none !important;
+            }
+            
+            .results-screen {
+                display: block !important;
+                border: none;
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- BACKGROUND -->
+    <div class="ac-background" id="acBackground"></div>
+
+    <!-- BACKGROUND MUSIC -->
+    <audio id="backgroundMusic" src="music/kitty.mp3" loop hidden></audio>
+    
+    <!-- MODAL DIALOG FOR ENLARGED IMAGES -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <img src="" alt="Enlarged cat image" class="modal-image" id="modalImage">
+        </div>
+    </div>
+    
+    <!-- LOADING OVERLAY WITH TIPS -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <img src="image/kitty.gif" 
+            alt="Loading cat" 
+            class="loading-cat"
+            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRkZGIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzMzNjkxZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPjx0c3BhbiBkeT0iMGVtIj48YW5pbWF0ZSBhdHRyaWJ1dGVOYW1lPSJvcGFjaXR5IiB2YWx1ZXM9IjE7MDsxIiBkdXI9IjEuNXMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIi8+8J+ktDwvdHNwYW4+PC90ZXh0Pjwvc3ZnPg=='">
+        <div class="loading-text">Loading Kitties...</div>
+        <div class="loading-tips">
+            <i class="fas fa-arrow-left"></i> Swipe left for NOPE<br>
+            <i class="fas fa-arrow-right"></i> Swipe right for LIKE
+        </div>
+    </div>
+
+    <!-- HEADER SECTION -->
+    <header>
+        <div class="header-content">
+            <!-- CAT ICON -->
+            <div class="cat-icon">
+                <i class="fas fa-paw"></i>
+            </div>
+            
+            <!-- TITLE -->
+            <h1 class="title">Paws & <span>Preferences</span></h1>
+        </div>
+    </header>
+
+    <!-- BODY SECTION -->
+    <main>
+        <div class="main-content">
+            <div class="swipe-container">
+                <!-- PROGRESS BAR - CLEAN AND SEPARATE -->
+                <div class="progress-container">
+                    <div class="progress-text" id="progressText">
+                        Kitty 0 of 20
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <!-- SWIPE AREA -->
+                <div class="swipe-area" id="swipeArea">
+                    <!-- Swipe indicators -->
+                    <div class="swipe-indicator like" id="likeIndicator">
+                    </div>
+                    <div class="swipe-indicator dislike" id="dislikeIndicator">
+                    </div>
+                    
+                    <!-- Cat cards will be dynamically inserted here -->
+                </div>
+
+                <!-- RESULTS SCREEN -->
+                <div class="results-screen" id="resultsScreen">
+                    <h2 class="results-title">🐈Your Kitty Collection🐈</h2>
+                    
+                    <!-- TABS -->
+                    <div class="results-tabs">
+                        <button class="tab active" data-tab="liked">
+                            <i class="fas fa-heart"></i> Liked
+                            <span class="tab-count" id="likedCount">0</span>
+                        </button>
+                        <button class="tab" data-tab="disliked">
+                            <i class="fas fa-times"></i> Disliked
+                            <span class="tab-count" id="dislikedCount">0</span>
+                        </button>
+                    </div>
+                    
+                    <!-- CATS LIST -->
+                    <div class="cats-list-container">
+                        <!-- Liked Cats List -->
+                        <div class="cats-list active" id="likedCatsList"></div>
+                        
+                        <!-- Disliked Cats List -->
+                        <div class="cats-list" id="dislikedCatsList"></div>
+                    </div>
+                    
+                    <!-- RESTART BUTTON -->
+                    <button class="restart-btn" id="restartBtn">
+                        <i class="fas fa-redo"></i> Start New Adventure
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER SECTION -->
+    <footer>
+        <div class="footer-content">
+            <!-- COPYRIGHT -->
+            <div>Copyright © 2025 Paw And Preferences</div>
+            
+            <!-- DIVIDER -->
+            <div class="footer-divider">|</div>
+            
+            <!-- LINKS -->
+            <div class="footer-links">
+                <!-- CATAAS API LINK -->
+                <a href="https://cataas.com/" target="_blank" rel="noopener noreferrer">
+                    Cataas API <i class="fas fa-cat"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- DRAG FEEDBACK -->
+    <div class="drag-feedback" id="dragFeedback"></div>
+
+    <!-- JAVASCRIPT SECTION -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize background
+            initializeBackground();
+            
+            // Initialize music
+            initializeMusic();
+            
+            // Initialize swipe app
+            initializeSwipeApp();
+            
+            // Adjust layout
+            adjustLayout();
+            
+            // Listen for resize events
+            window.addEventListener('resize', adjustLayout);
+        });
+
+        function initializeBackground() {
+            const background = document.getElementById('acBackground');
+            
+            const decorations = [
+                { type: 'leaf', count: 15 },
+                { type: 'paw', count: 10 },
+                { type: 'dot', count: 20 }
+            ];
+            
+            decorations.forEach(deco => {
+                for (let i = 0; i < deco.count; i++) {
+                    const element = document.createElement('div');
+                    
+                    if (deco.type === 'leaf') {
+                        element.className = 'ac-leaf';
+                        element.innerHTML = '<i class="fas fa-leaf"></i>';
+                    } else if (deco.type === 'paw') {
+                        element.className = 'ac-paw';
+                        element.innerHTML = '<i class="fas fa-paw"></i>';
+                    } else if (deco.type === 'dot') {
+                        element.className = 'ac-dot';
+                        element.style.width = Math.random() * 10 + 5 + 'px';
+                        element.style.height = element.style.width;
+                    }
+                    
+                    element.style.left = Math.random() * 100 + '%';
+                    element.style.top = Math.random() * 100 + '%';
+                    element.style.animationDelay = Math.random() * 5 + 's';
+                    background.appendChild(element);
+                }
+            });
+        }
+
+        function initializeMusic() {
+            document.addEventListener("click", () => {
+                const bgm = document.getElementById("backgroundMusic");
+                bgm.play().catch(e => console.log("Autoplay prevented:", e));
+            }, { once: true });
+        }
+
+        function adjustLayout() {
+            const vh = window.innerHeight;
+            const header = document.querySelector('header');
+            const footer = document.querySelector('footer');
+            const main = document.querySelector('main');
+            
+            const headerHeight = header.offsetHeight;
+            const footerHeight = footer.offsetHeight;
+            const mainHeight = vh - headerHeight - footerHeight;
+            
+            main.style.minHeight = mainHeight + 'px';
+            
+            // Adjust swipe area height
+            const swipeArea = document.getElementById('swipeArea');
+            const progressContainer = document.querySelector('.progress-container');
+            
+            if (swipeArea && progressContainer) {
+                const progressHeight = progressContainer.offsetHeight;
+                swipeArea.style.height = `calc(100% - ${progressHeight + 30}px)`;
+                swipeArea.style.marginTop = `${progressHeight + 20}px`;
+            }
+        }
+
+        function initializeSwipeApp() {
+            // Configuration
+            const TOTAL_CATS = 20;
+            const CAT_API_URL = 'https://cataas.com/cat?json=true';
+            
+            // State
+            let cats = [];
+            let likedCats = [];
+            let dislikedCats = [];
+            let currentIndex = 0;
+            let isDragging = false;
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let currentCard = null;
+            let rotation = 0;
+            
+            // DOM Elements
+            const swipeArea = document.getElementById('swipeArea');
+            const likeIndicator = document.getElementById('likeIndicator');
+            const dislikeIndicator = document.getElementById('dislikeIndicator');
+            const progressText = document.getElementById('progressText');
+            const progressFill = document.getElementById('progressFill');
+            const resultsScreen = document.getElementById('resultsScreen');
+            const likedCatsGrid = document.getElementById('likedCatsGrid');
+            const dislikedCatsGrid = document.getElementById('dislikedCatsGrid');
+            const likedCount = document.getElementById('likedCount');
+            const dislikedCount = document.getElementById('dislikedCount');
+            const restartBtn = document.getElementById('restartBtn');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const tabs = document.querySelectorAll('.tab');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalClose = document.getElementById('modalClose');
+            const modalImage = document.getElementById('modalImage');
+            
+            // Load cats from API
+            async function loadCats() {
+                loadingOverlay.style.display = 'flex';
+                
+                try {
+                    const promises = [];
+                    for (let i = 0; i < TOTAL_CATS; i++) {
+                        promises.push(
+                            fetch(`${CAT_API_URL}&t=${Date.now() + i}`)
+                                .then(response => {
+                                    if (!response.ok) throw new Error('Network response was not ok');
+                                    return response.json();
+                                })
+                                .then(data => ({
+                                    id: data.id || `cat-${i}-${Date.now()}`,
+                                    url: `https://cataas.com/cat/${data.id}?t=${Date.now()}`,
+                                    tags: data.tags || ['cat'],
+                                    createdAt: data.created_at || new Date().toISOString()
+                                }))
+                                .catch((error) => {
+                                    console.warn(`Failed to load cat ${i}:`, error);
+                                    return {
+                                        id: `fallback-${i}-${Date.now()}`,
+                                        url: `https://cataas.com/cat?t=${Date.now() + i}`,
+                                        tags: ['cute', 'cat'],
+                                        createdAt: new Date().toISOString()
+                                    };
+                                })
+                        );
+                    }
+                    
+                    cats = await Promise.all(promises);
+                    console.log(`Successfully loaded ${cats.length} cats`);
+                    
+                    // Preload first few images
+                    preloadImages(3);
+                    
+                    // Create and display first card
+                    createCard(currentIndex);
+                    updateProgress();
+                    
+                } catch (error) {
+                    console.error('Error loading cats:', error);
+                    // Fallback cats
+                    cats = Array(TOTAL_CATS).fill().map((_, i) => ({
+                        id: `fallback-${i}-${Date.now()}`,
+                        url: `https://cataas.com/cat?t=${Date.now() + i}`,
+                        tags: ['cute', 'cat'],
+                        createdAt: new Date().toISOString()
+                    }));
+                    createCard(currentIndex);
+                    updateProgress();
+                } finally {
+                    setTimeout(() => {
+                        loadingOverlay.style.display = 'none';
+                    }, 2000); // Show loading screen for at least 2 seconds
+                }
+            }
+            
+            function preloadImages(count) {
+                for (let i = 0; i < Math.min(count, cats.length); i++) {
+                    const img = new Image();
+                    img.src = cats[i].url;
+                }
+            }
+            
+            function createCard(index) {
+                if (index >= cats.length) return;
+                
+                const cat = cats[index];
+                
+                // Remove existing card
+                if (currentCard) {
+                    currentCard.remove();
+                }
+                
+                // Create new card
+                currentCard = document.createElement('div');
+                currentCard.className = 'cat-card';
+                currentCard.dataset.index = index;
+                
+                currentCard.innerHTML = `
+                    <div class="card-image-container">
+                        <img src="${cat.url}" 
+                            alt="Kitty ${index + 1}" 
+                            class="card-image"
+                            onload="handleImageLoad(this, ${index})"
+                            onerror="handleImageError(this, ${index})">
+                        <div class="loading-indicator" id="loadingIndicator-${index}">
+                            <div class="loading-spinner"></div>
+                            <div class="loading-text">Loading Kitty ${index + 1}...</div>
+                        </div>
+                    </div>
+                `;
+                
+                swipeArea.appendChild(currentCard);
+                
+                // Show loading indicator immediately
+                const loadingIndicator = document.getElementById(`loadingIndicator-${index}`);
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'flex';
+                }
+            }
+            
+            function updateProgress() {
+                const progress = ((currentIndex + 1) / cats.length) * 100;
+                progressFill.style.width = `${progress}%`;
+                progressText.textContent = `Kitty ${currentIndex + 1} of ${cats.length}`;
+            }
+            
+            function showResults() {
+                // Update counts
+                likedCount.textContent = likedCats.length;
+                dislikedCount.textContent = dislikedCats.length;
+                
+                // Display cats
+                displayCatsInGrid(likedCats, likedCatsList);
+                displayCatsInGrid(dislikedCats, dislikedCatsList);
+                
+                // Hide swipe area and progress bar, show results
+                swipeArea.style.display = 'none';
+                document.querySelector('.progress-container').style.display = 'none';
+                resultsScreen.style.display = 'flex';
+            }
+            
+            function displayCatsInGrid(catsArray, listElement) {
+                listElement.innerHTML = '';
+                
+                if (catsArray.length === 0) {
+                    const emptyState = document.createElement('div');
+                    emptyState.className = 'empty-state empty-state-list';
+                    emptyState.innerHTML = `
+                        <div class="empty-icon">
+                            <i class="fas fa-cat"></i>
+                        </div>
+                        <div class="empty-text">
+                            No kitties here yet
+                        </div>
+                    `;
+                    listElement.appendChild(emptyState);
+                    return;
+                }
+                
+                catsArray.forEach((cat, index) => {
+                    const catItem = document.createElement('div');
+                    catItem.className = 'cat-list-item';
+                    
+                    // Format date
+                    const date = cat.createdAt ? new Date(cat.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    }) : 'Today';
+                    
+                    // Format tags
+                    const tags = cat.tags || ['cute', 'cat'];
+                    const displayTags = tags.slice(0, 3); // Show only first 3 tags
+                    
+                    catItem.innerHTML = `
+                        <div class="cat-list-image-container">
+                            <img src="${cat.url}" alt="Cat ${index + 1}" class="cat-list-image">
+                        </div>
+                        <div class="cat-list-info">
+                            <h3 class="cat-list-title">Kitty #${index + 1}</h3>
+                            <div class="cat-list-tags">
+                                ${displayTags.map(tag => `<span class="cat-tag">${tag}</span>`).join('')}
+                            </div>
+                            <div class="cat-list-date">
+                                <i class="far fa-calendar-alt"></i> ${date}
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Click to show enlarged image
+                    catItem.addEventListener('click', () => {
+                        modalImage.src = cat.url;
+                        modalOverlay.style.display = 'flex';
+                        document.body.style.overflow = 'hidden';
+                    });
+                    
+                    listElement.appendChild(catItem);
+                });
+            }
+            
+            function swipe(direction) {
+                if (!currentCard || currentIndex >= cats.length) return;
+                
+                const currentCat = cats[currentIndex];
+                
+                // Add to appropriate list
+                if (direction === 'right') {
+                    likedCats.push(currentCat);
+                    currentCard.classList.add('swipe-right');
+                    likeIndicator.style.opacity = '0.9';
+                    setTimeout(() => likeIndicator.style.opacity = '0', 500);
+                    showDragFeedback('like', 200); // Show feedback
+                } else {
+                    dislikedCats.push(currentCat);
+                    currentCard.classList.add('swipe-left');
+                    dislikeIndicator.style.opacity = '0.9';
+                    setTimeout(() => dislikeIndicator.style.opacity = '0', 500);
+                    showDragFeedback('dislike', -200); // Show feedback
+                }
+                
+                // Move to next cat
+                setTimeout(() => {
+                    currentIndex++;
+                    
+                    if (currentIndex < cats.length) {
+                        createCard(currentIndex);
+                        updateProgress();
+                        
+                        // Preload next image if available
+                        if (currentIndex + 1 < cats.length) {
+                            const img = new Image();
+                            img.src = cats[currentIndex + 1].url;
+                        }
+                    } else {
+                        // All cats viewed
+                        setTimeout(() => {
+                            hideDragFeedback();
+                            showResults();
+                        }, 300);
+                    }
+                    
+                    // Hide feedback after animation
+                    setTimeout(() => {
+                        hideDragFeedback();
+                    }, 500);
+                }, 300);
+            }
+            
+            function resetApp() {
+                currentIndex = 0;
+                likedCats = [];
+                dislikedCats = [];
+                
+                // Reset UI
+                swipeArea.style.display = 'block';
+                document.querySelector('.progress-container').style.display = 'block';
+                resultsScreen.style.display = 'none';
+                
+                // Reload fresh cats
+                loadCats();
+            }
+                        
+            // Tab Switch Section
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.dataset.tab;
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Show corresponding list
+                    document.querySelectorAll('.cats-list').forEach(list => list.classList.remove('active'));
+                    document.getElementById(`${tabName}CatsList`).classList.add('active');
+                });
+            });
+            
+            // Modal functionality
+            modalClose.addEventListener('click', () => {
+                modalOverlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    modalOverlay.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Restart button
+            restartBtn.addEventListener('click', resetApp);
+            
+            // Add drag feedback element
+            const dragFeedback = document.getElementById('dragFeedback');
+
+            function showDragFeedback(type, distance) {
+                dragFeedback.textContent = type === 'like' ? 'LIKE! ❤️' : 'NOPE! ❌';
+                dragFeedback.className = `drag-feedback ${type === 'like' ? 'drag-like' : 'drag-dislike'}`;
+                dragFeedback.style.opacity = Math.min(Math.abs(distance) / 150, 1);
+            }
+
+            function hideDragFeedback() {
+                dragFeedback.style.opacity = '0';
+            }
+
+            // Touch events for mobile swipe - IMPROVED
+            swipeArea.addEventListener('touchstart', (e) => {
+                if (!currentCard) return;
+                
+                isDragging = true;
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                currentCard.style.transition = 'none';
+                currentCard.style.cursor = 'grabbing';
+                
+                e.preventDefault();
+            }, { passive: false });
+
+            swipeArea.addEventListener('touchmove', (e) => {
+                if (!isDragging || !currentCard) return;
+                
+                const touchX = e.touches[0].clientX;
+                const touchY = e.touches[0].clientY;
+                const deltaX = touchX - touchStartX;
+                const deltaY = touchY - touchStartY;
+                
+                // Only process if it's a horizontal swipe
+                if (Math.abs(deltaX) > Math.abs(deltaY) * 0.5) {
+                    // Calculate rotation
+                    rotation = deltaX * 0.15; // Slightly more rotation
+                    
+                    // Apply transform
+                    currentCard.style.transform = `translateX(${deltaX}px) rotate(${rotation}deg)`;
+                    
+                    // Show indicators based on direction
+                    if (deltaX > 30) {
+                        likeIndicator.style.opacity = Math.min(deltaX / 100, 0.9);
+                        dislikeIndicator.style.opacity = '0';
+                        showDragFeedback('like', deltaX);
+                    } else if (deltaX < -30) {
+                        dislikeIndicator.style.opacity = Math.min(-deltaX / 100, 0.9);
+                        likeIndicator.style.opacity = '0';
+                        showDragFeedback('dislike', deltaX);
+                    } else {
+                        likeIndicator.style.opacity = '0';
+                        dislikeIndicator.style.opacity = '0';
+                        hideDragFeedback();
+                    }
+                    
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            swipeArea.addEventListener('touchend', (e) => {
+                if (!isDragging || !currentCard) return;
+                
+                isDragging = false;
+                currentCard.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1)';
+                currentCard.style.cursor = 'grab';
+                
+                const touchEndX = e.changedTouches[0].clientX;
+                const deltaX = touchEndX - touchStartX;
+                
+                // Reset indicators
+                likeIndicator.style.opacity = '0';
+                dislikeIndicator.style.opacity = '0';
+                hideDragFeedback();
+                
+                // Determine swipe direction with better threshold
+                const threshold = 80; // Lower threshold for easier swiping
+                if (Math.abs(deltaX) > threshold) {
+                    swipe(deltaX > 0 ? 'right' : 'left');
+                } else {
+                    // Return to center with smooth animation
+                    currentCard.style.transform = 'translateX(0) rotate(0deg)';
+                }
+            });
+
+            // Mouse events for desktop swipe - IMPROVED
+            swipeArea.addEventListener('mousedown', (e) => {
+                if (!currentCard) return;
+                
+                isDragging = true;
+                touchStartX = e.clientX;
+                touchStartY = e.clientY;
+                currentCard.style.transition = 'none';
+                currentCard.style.cursor = 'grabbing';
+                
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging || !currentCard) return;
+                
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+                const deltaX = mouseX - touchStartX;
+                const deltaY = mouseY - touchStartY;
+                
+                // Only process if it's a horizontal swipe
+                if (Math.abs(deltaX) > Math.abs(deltaY) * 0.5) {
+                    rotation = deltaX * 0.15;
+                    currentCard.style.transform = `translateX(${deltaX}px) rotate(${rotation}deg)`;
+                    
+                    if (deltaX > 30) {
+                        likeIndicator.style.opacity = Math.min(deltaX / 100, 0.9);
+                        dislikeIndicator.style.opacity = '0';
+                        showDragFeedback('like', deltaX);
+                    } else if (deltaX < -30) {
+                        dislikeIndicator.style.opacity = Math.min(-deltaX / 100, 0.9);
+                        likeIndicator.style.opacity = '0';
+                        showDragFeedback('dislike', deltaX);
+                    } else {
+                        likeIndicator.style.opacity = '0';
+                        dislikeIndicator.style.opacity = '0';
+                        hideDragFeedback();
+                    }
+                }
+            });
+
+            document.addEventListener('mouseup', (e) => {
+                if (!isDragging || !currentCard) return;
+                
+                isDragging = false;
+                currentCard.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1)';
+                currentCard.style.cursor = 'grab';
+                
+                const mouseEndX = e.clientX;
+                const deltaX = mouseEndX - touchStartX;
+                
+                likeIndicator.style.opacity = '0';
+                dislikeIndicator.style.opacity = '0';
+                hideDragFeedback();
+                
+                const threshold = 80;
+                if (Math.abs(deltaX) > threshold) {
+                    swipe(deltaX > 0 ? 'right' : 'left');
+                } else {
+                    currentCard.style.transform = 'translateX(0) rotate(0deg)';
+                }
+            });
+
+            // Prevent text selection during drag
+            swipeArea.addEventListener('selectstart', (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                }
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (currentIndex >= cats.length) return;
+                
+                switch(e.key) {
+                    case 'ArrowLeft':
+                        swipe('left');
+                        break;
+                    case 'ArrowRight':
+                        swipe('right');
+                        break;
+                    case ' ':
+                        swipe('right');
+                        break;
+                    case 'r':
+                    case 'R':
+                        resetApp();
+                        break;
+                    case 'Escape':
+                        modalOverlay.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                        break;
+                }
+            });
+            
+            // Initialize
+            loadCats();
+        }
+
+        function handleImageLoad(imgElement, index) {
+            console.log(`Image ${index} loaded successfully`);
+            imgElement.classList.remove('loading');
+            const loadingIndicator = document.getElementById(`loadingIndicator-${index}`);
+            if (loadingIndicator) {
+                loadingIndicator.style.display = 'none';
+            }
+        }
+
+        function handleImageError(imgElement, index) {
+            console.log(`Image ${index} failed to load`);
+            imgElement.onerror = null;
+            imgElement.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiM4ZGJlYzgiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSIjMzM2OTFlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+8J+ktDwvdGV4dD48L3N2Zz4=';
+            imgElement.classList.remove('loading');
+            const loadingIndicator = document.getElementById(`loadingIndicator-${index}`);
+            if (loadingIndicator) {
+                loadingIndicator.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
