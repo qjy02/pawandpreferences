@@ -1464,17 +1464,7 @@
             }
             
             function resetApp() {
-                currentIndex = 0;
-                likedCats = [];
-                dislikedCats = [];
-                
-                // Reset UI
-                swipeArea.style.display = 'block';
-                document.querySelector('.progress-container').style.display = 'block';
-                resultsScreen.style.display = 'none';
-                
-                // Reload fresh cats
-                loadCats();
+                location.reload();
             }
                         
             // Tab Switch Section
