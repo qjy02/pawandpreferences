@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paws & Preferences: Cat Swipe Adventure</title>
+    <title>Paws & Preferences: Find Your Favourite Kitty</title>
 
     <!-- ICON -->
     <link rel="icon" href="image/Vispiv.png" type="image/png" />
@@ -121,6 +121,26 @@
             max-width: 1400px;
             position: relative;
         }
+
+        /* DECORATION SECTION */
+        .ac-leaf-decoration {
+            position: absolute;
+            left: 20px;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .ac-leaf-decoration .leaf {
+            color: var(--white);
+            font-size: 1.4rem;
+            text-shadow: 1px 1px 0 var(--dark-green);
+            animation: sway 3s infinite alternate;
+        }
+        
+        @keyframes sway {
+            0% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
         
         .cat-icon {
             font-size: 1.8rem;
@@ -138,6 +158,11 @@
             box-shadow: 0 3px 0 var(--secondary-green);
             cursor: pointer;
             flex-shrink: 0;
+        }
+
+        .icon-link {
+            text-decoration: none;
+            color: inherit; 
         }
         
         .title {
@@ -210,10 +235,28 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
             width: 0%;
-            transition: width 0.5s ease;
             border-radius: 4px;
+            transition: width 0.5s ease;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+
+            /* Striped gradient */
+            background: repeating-linear-gradient(
+                45deg,
+                #4caf50,
+                #4caf50 10px,
+                #81c784 10px,
+                #81c784 20px
+            );
+
+            /* Animate stripes sliding */
+            background-size: 200% 100%;
+            animation: stripes-slide 2s linear infinite;
+        }
+
+        @keyframes stripes-slide {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 0; }
         }
 
         /* DRAG AREA */
@@ -368,7 +411,7 @@
             border: none;
         }
 
-        /* RESULTS SCREEN - CLEAN DESIGN */
+        /* RESULTS SCREEN */
         .results-screen {
             width: 100%;
             height: 100%;
@@ -391,7 +434,7 @@
             padding-top: 0.5rem;
         }
 
-        /* TABS - CLEAN */
+        /* TABS */
         .results-tabs {
             display: flex;
             background: transparent;
@@ -585,7 +628,7 @@
             max-height: 80vh;
         }
 
-        /* RESTART BUTTON */
+        /* RESTART BUTTON AT RESULT SECTION */
         .restart-btn {
             padding: 1rem 2rem;
             font-size: clamp(1.2rem, 3vw, 1.5rem);
@@ -768,7 +811,7 @@
             color: var(--game-blue);
         }
 
-        /* RESPONSIVE DESIGN - ENHANCED */
+        /* RESPONSIVE DESIGN */
         @media (max-width: 768px) {
             .swipe-area {
                 height: calc(100% - 90px);
@@ -940,7 +983,11 @@
     <!-- BACKGROUND -->
     <div class="ac-background" id="acBackground"></div>
 
-    <!-- BACKGROUND MUSIC -->
+    <!-- BACKGROUND MUSIC 
+        Music track: "Kitty" by Piki
+        Source: https://freetouse.com/music
+        Free to use in non-commercial content with attribution
+    -->
     <audio id="backgroundMusic" src="music/kitty.mp3" loop hidden></audio>
     
     <!-- MODAL DIALOG FOR ENLARGED IMAGES -->
@@ -949,7 +996,7 @@
             <button class="modal-close" id="modalClose">
                 <i class="fas fa-times"></i>
             </button>
-            <img src="" alt="Enlarged cat image" class="modal-image" id="modalImage">
+            <img src="" alt="Kitty" class="modal-image" id="modalImage">
         </div>
     </div>
     
@@ -971,7 +1018,7 @@
         <div class="header-content">
             <!-- CAT ICON -->
             <div class="cat-icon">
-                <i class="fas fa-paw"></i>
+                <a href="index.html" class="icon-link"><i class="fas fa-paw"></i></a>
             </div>
             
             <!-- TITLE -->
@@ -983,7 +1030,7 @@
     <main>
         <div class="main-content">
             <div class="swipe-container">
-                <!-- PROGRESS BAR - CLEAN AND SEPARATE -->
+                <!-- PROGRESS BAR -->
                 <div class="progress-container">
                     <div class="progress-text" id="progressText">
                         Kitty 0 of 20
@@ -1062,6 +1109,7 @@
 
     <!-- JAVASCRIPT SECTION -->
     <script>
+        //FUNCTIONS LOADED IN BACKGROUND
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize background
             initializeBackground();
@@ -1142,6 +1190,7 @@
             }
         }
 
+        //CORE FUNCTION TO SWIPE CAT CARDS
         function initializeSwipeApp() {
             // Configuration
             const TOTAL_CATS = 20;
@@ -1639,6 +1688,7 @@
             loadCats();
         }
 
+        //IF IMAGE DOES NOT LOAD FULLY DURING SWIPING SECTION
         function handleImageLoad(imgElement, index) {
             console.log(`Image ${index} loaded successfully`);
             imgElement.classList.remove('loading');
@@ -1648,6 +1698,7 @@
             }
         }
 
+        //IF IMAGE HAS ERROR DURING LOADING IN SWIPING SECTION
         function handleImageError(imgElement, index) {
             console.log(`Image ${index} failed to load`);
             imgElement.onerror = null;
