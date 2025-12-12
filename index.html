@@ -703,6 +703,157 @@
                 padding: 0.8rem 1.5rem;
             }
         }
+
+        /* LANDSCAPE WARNING SECTION */
+        .landscape-warning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--light-green);
+            color: var(--dark-green);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .landscape-warning.active {
+            display: flex;
+        }
+
+        .landscape-warning-content {
+            max-width: 350px;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow);
+            border: 3px solid var(--light-brown);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .landscape-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            animation: rotateDevice 2s ease-in-out infinite;
+            color: var(--dark-gray);
+        }
+
+        .landscape-icon .fa-mobile-alt {
+            position: relative;
+            z-index: 2;
+            display: block;
+        }
+
+        .landscape-icon .fa-sync-alt {
+            position: absolute;
+            font-size: 1.8rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--game-yellow);
+            z-index: 3;
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes rotateDevice {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(-90deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .landscape-warning h2 {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--dark-green);
+        }
+
+        .landscape-warning p {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: var(--earth-brown);
+        }
+
+        .landscape-warning p:last-of-type {
+            margin-bottom: 0;
+            font-size: 1rem;
+            color: var(--secondary-green);
+        }
+
+        /* Hide main content when landscape warning is shown */
+        body.landscape-mode main,
+        body.landscape-mode header,
+        body.landscape-mode footer {
+            opacity: 0.3;
+            filter: blur(2px);
+            pointer-events: none;
+        }
+
+        /* MOBILE LANDSCAPE DETECTION */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .landscape-warning {
+                display: flex !important;
+            }
+            
+            body {
+                overflow: hidden;
+            }
+        }
+
+        /* For larger mobile devices like iPhone 14 Pro Max */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .landscape-warning-content {
+                max-width: 400px;
+                padding: 2.5rem 2rem;
+            }
+            
+            .landscape-icon {
+                font-size: 4.5rem;
+            }
+            
+            .landscape-warning h2 {
+                font-size: 2.2rem;
+            }
+            
+            .landscape-warning p {
+                font-size: 1.2rem;
+            }
+        }
+
+        .landscape-continue,
+        #continueLandscape {
+            display: none;
+        }
     </style>
 </head>
 
@@ -716,6 +867,19 @@
         Free to use in non-commercial content with attribution
     -->
     <audio id="backgroundMusic" src="music/kitty.mp3" loop hidden></audio>
+
+    <!-- LANDSCAPE WARNING SECTION -->
+    <div class="landscape-warning" id="landscapeWarning">
+        <div class="landscape-warning-content">
+            <div class="landscape-icon">
+                <i class="fas fa-mobile-alt"></i>
+                <i class="fas fa-sync-alt"></i>
+            </div>
+            <h2>Please Rotate Your Device</h2>
+            <p>This app works best in portrait mode (vertical orientation)</p>
+            <p>Please rotate your phone to continue</p>
+        </div>
+    </div>
     
     <!-- HEADER SECTION -->
     <header>
@@ -861,6 +1025,28 @@
                 const bgm = document.getElementById("backgroundMusic");
                 bgm.play();
             }, { once: true });
+
+            // Check landscape mode on load
+            setTimeout(checkLandscapeMode, 100);
+
+            // Check on resize and orientation change
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(checkLandscapeMode, 150);
+            });
+
+            // Check immediately on orientation change
+            window.addEventListener('orientationchange', function() {
+                setTimeout(checkLandscapeMode, 100);
+            });
+
+            // Also check when page becomes visible again
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    setTimeout(checkLandscapeMode, 300);
+                }
+            });
             
             // INITIALIZE FLIPPING NOTE FUNCTIONALITY
             function initializeFlippingNote() {
@@ -996,6 +1182,35 @@
             // Initialize flipping note
             initializeFlippingNote();
         });
+
+        // CHECK LANDSCAPE MODE FUNCTION
+        function checkLandscapeMode() {
+            const landscapeWarning = document.getElementById('landscapeWarning');
+            
+            // Get viewport dimensions
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const isLandscape = width > height;
+            
+            // Simple detection: show warning on mobile devices in landscape
+            // Mobile detection based on screen size and touch capability
+            const isMobileSize = width <= 1024 || height <= 1024;
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            // Show warning if:
+            // 1. Device is in landscape AND
+            // 2. Screen is mobile-sized (width < 1024 or height < 1024) AND
+            // 3. It's a touch device (mobile/tablet)
+            if (isLandscape && isMobileSize && isTouchDevice && height < 600) {
+                landscapeWarning.classList.add('active');
+                document.body.classList.add('landscape-mode');
+                return true;
+            } else {
+                landscapeWarning.classList.remove('active');
+                document.body.classList.remove('landscape-mode');
+                return false;
+            }
+        }
     </script>
 </body>
 </html>
